@@ -24,7 +24,7 @@ public class RogueController : MonoBehaviour
         _isMovingRight = Input.GetKey(KeyCode.D);
         _isMovingLeft = Input.GetKey(KeyCode.A);
 
-        _isMoving = (_isMovingRight || _isMovingLeft) && (_isMovingRight && _isMovingLeft) == false;
+        _isMoving = _isMovingLeft ^ _isMovingRight;
 
         if (_isMoving)
         {

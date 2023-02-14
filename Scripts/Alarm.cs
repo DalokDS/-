@@ -17,27 +17,31 @@ public class Alarm : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void IncreaseVolume()
     {
-        if (collision.TryGetComponent<RogueController>(out RogueController rogue))
-        {
-            if (_decreaseVolume != null)
-                StopCoroutine(_decreaseVolume);
+        TryStopCoroutine(_decreaseVolume);
 
-            if (_audioSource.volume == 0)
-                _audioSource.Play();
+        if (_audioSource.volume == 0)
+            _audioSource.Play();
 
-            _increaseVolume = StartCoroutine(SetVolume(_maxVolume));
-        }
+        _increaseVolume = StartCoroutine(SetVolume(_maxVolume));
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    public void DecreaseVolume()
     {
-        if (collision.TryGetComponent<RogueController>(out RogueController rogue))
+        TryStopCoroutine(_increaseVolume);
+        _decreaseVolume = StartCoroutine(SetVolume(_minVolume));
+    }
+
+    private bool TryStopCoroutine(Coroutine coroutine)
+    {
+        if (coroutine != null)
         {
-            StopCoroutine(_increaseVolume);
-            _decreaseVolume = StartCoroutine(SetVolume(_minVolume));
+            StopCoroutine(coroutine);
+            return true;
         }
+
+        return false;
     }
 
     private IEnumerator SetVolume(float value)
