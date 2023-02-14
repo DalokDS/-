@@ -6,8 +6,7 @@ public class Alarm : MonoBehaviour
 {
     private AudioSource _audioSource;
 
-    private Coroutine _increaseVolume;
-    private Coroutine _decreaseVolume;
+    private Coroutine _setVolume;
 
     private float _maxVolume = 1f;
     private float _minVolume = 0;
@@ -19,25 +18,25 @@ public class Alarm : MonoBehaviour
 
     public void IncreaseVolume()
     {
-        TryStopCoroutine(_decreaseVolume);
+        TryStopSettingVolume();
 
         if (_audioSource.volume == 0)
             _audioSource.Play();
 
-        _increaseVolume = StartCoroutine(SetVolume(_maxVolume));
+        _setVolume = StartCoroutine(SetVolume(_maxVolume));
     }
 
     public void DecreaseVolume()
     {
-        TryStopCoroutine(_increaseVolume);
-        _decreaseVolume = StartCoroutine(SetVolume(_minVolume));
+        TryStopSettingVolume();
+        _setVolume = StartCoroutine(SetVolume(_minVolume));
     }
 
-    private bool TryStopCoroutine(Coroutine coroutine)
+    private bool TryStopSettingVolume()
     {
-        if (coroutine != null)
+        if (_setVolume != null)
         {
-            StopCoroutine(coroutine);
+            StopCoroutine(_setVolume);
             return true;
         }
 
